@@ -90,8 +90,8 @@ app.put("/blogs/:id", function(req,res){
        if(err){
            res.redirect("/blogs");
        }else{
-           //res.redirect("/blogs/"+req.params.id);  //redirect the user to the SHOW page
-           res.send("Update route");
+           res.redirect("/blogs/"+req.params.id);  //redirect the user to the SHOW page
+          
        }
    });
 });
