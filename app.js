@@ -1,5 +1,6 @@
-var bodyParser      = require("body-parser"),
+var expressSanitizer= require("express-sanitizer"),
     methodOverride  = require("method-override"),
+    bodyParser      = require("body-parser"),
     mongoose        = require("mongoose"),
     express         = require("express"),
     app             = express();
@@ -10,6 +11,7 @@ app.set("view engine","ejs");
 app.use(express.static("public"));  //in order to serve our custom style sheet
 app.use(bodyParser.urlencoded( {extended:true} ) );
 app.use(methodOverride("_method"));  //tell the app to look for "_method" in the query string
+app.use(expressSanitizer());
 
 //MONGOOSE/MODEL CONFIG
 var blogSchema = new mongoose.Schema({
@@ -49,6 +51,9 @@ app.get("/blogs/new",function(req,res){
 
 //CREATE ROUTE
 app.post("/blogs", function(req,res){
+    //sanitize the post request so that user cannot embed some, say, malicious javascript script tag
+    req.body.blog.body = req.sanitize(req.body.blog.body);
+    
     //create a new blog
     Blog.create(req.body.blog,function(err, newBlog){
         if(err){
@@ -59,6 +64,10 @@ app.post("/blogs", function(req,res){
         }
     });
    
+});
+
+app.get("/restfulroute", function(req,res){
+    res.render()
 });
 
 //SHOW ROUTE
@@ -86,6 +95,9 @@ app.get("/blogs/:id/edit", function(req,res){
 
 //UPDATE ROUTE
 app.put("/blogs/:id", function(req,res){
+    //sanitize the post request so that user cannot embed some, say, malicious javascript script tag
+   req.body.blog.body = req.sanitize(req.body.blog.body);
+        
    Blog.findByIdAndUpdate(req.params.id, req.body.blog, function(err, updatedBlog){
        if(err){
            res.redirect("/blogs");
