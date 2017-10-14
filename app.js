@@ -20,7 +20,25 @@ var blogSchema = new mongoose.Schema({
 
 var Blog = mongoose.model("Blog", blogSchema);
 
+
 //RESTFUL ROUTES
+
+//it's conventional to set the root route to the index page
+app.get("/", function(req,res){
+    res.redirect("/blogs");
+});
+
+
+app.get("/blogs", function(req,res){
+    Blog.find({}, function(err,blogs){
+        if(err){
+            console.log(err);
+        }else{
+             res.render("index", {blogs: blogs});
+        }
+    });
+   
+});
 
 app.listen(process.env.PORT, process.env.IP,function(){
     
