@@ -24,11 +24,12 @@ var Blog = mongoose.model("Blog", blogSchema);
 //RESTFUL ROUTES
 
 //it's conventional to set the root route to the index page
+//ROOT ROUTE
 app.get("/", function(req,res){
     res.redirect("/blogs");
 });
 
-
+//INDEX ROUTE
 app.get("/blogs", function(req,res){
     Blog.find({}, function(err,blogs){
         if(err){
@@ -40,6 +41,35 @@ app.get("/blogs", function(req,res){
    
 });
 
+//NEW ROUTE
+app.get("/blogs/new",function(req,res){
+    res.render("new"); 
+});
+
+//CREATE ROUTE
+app.post("/blogs", function(req,res){
+    //create a new blog
+    Blog.create(req.body.blog,function(err, newBlog){
+        if(err){
+            res.render("new");  //send the user to the new form page again
+        }else{
+            //redirect to the index page
+            res.redirect("/blogs");
+        }
+    });
+   
+});
+
+//SHOW ROUTE
+app.get("/blogs/:id", function(req,res){
+   Blog.findById(req.params.id, function(err, foundBlog){
+       if(err){
+           res.redirect("/blogs");
+       }else{
+           res.render("show", {blog: foundBlog});
+       }
+   });
+});
 app.listen(process.env.PORT, process.env.IP,function(){
     
     console.log("Server is running");
