@@ -6,7 +6,9 @@ var expressSanitizer= require("express-sanitizer"),
     app             = express();
     
 //APP CONFIG
-mongoose.connect("mongodb://localhost/restful_blog_app");
+//mongoose.connect("mongodb://localhost/restful_blog_app");  
+mongoose.connect("mongodb://chatbot:0211@ds229878.mlab.com:29878/chatbot-site");
+
 app.set("view engine","ejs");
 app.use(express.static("public"));  //in order to serve our custom style sheet
 app.use(bodyParser.urlencoded( {extended:true} ) );
